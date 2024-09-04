@@ -2,18 +2,22 @@ import streamlit as st
 import requests
 
 api_key = "L87LXPHQ9oN33InyB897nkEa99TIiJqvbULBIwVR"
-url = "https://api.nasa.gov/planetary/apod?api_key=L87LXPHQ9oN33InyB897nkEa99TIiJqvbULBIwVR"
+url = f"https://api.nasa.gov/planetary/apod?api_key={api_key}"
 
-request = requests.get(url)
-content = request.json()
+response = requests.get(url)
+data = response.json()
 
-print(content)
+title = data["title"]
+image_url = data["url"]
+explanation = data["explanation"]
 
-st.set_page_config(layout="wide")
+image_filepath = "img.png"
+response2 = requests.get(image_url)
+with open(image_filepath, "wb") as file:
+    file.write(response2.content)
 
-st.header("Astronomy Picture Of The Day")
-st.image(content["url"])
-detail = content["explanation"]
-st.write(detail)
+st.title(title)
+st.image(image_filepath)
+st.write(explanation)
 
 
